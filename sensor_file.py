@@ -1,16 +1,22 @@
 from paho.mqtt import client as mqtt
 import time
+import os
 from os.path import exists
 
-# mqttBroker = '10.0.2.15'
-client = mqtt.Client("Temperature")                                
-client.connect("127.0.0.1", port = 1883)                     
-client.loop_start()
+with open('file_to_send.txt', "rb") as f:
+    data = f.read()
 
-file = open("/home/bishal/Desktop/MQTT/sharma_tori/test.uxp", "rb")         
-data = file.read()                                            
-byteArray = bytes(data)                                       
-client.publish(topic="uxp file", payload= byteArray,qos=2)
 while True:
-    if (exists('test1883.uxp') == True):
+    if exists("server_start.lock") == True:
+        client = mqtt.Client("c1")
+        client.connect("127.0.0.1", port = 1883)
+        client.loop_start()
+        client.publish(topic="file", payload= data, qos=2)
+        while True:
+            if exists('banyo.lock') == True:
+                os.system('touch client_end.lock')
+                break
+        client.loop_stop()
         break
+    else:
+        pass

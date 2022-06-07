@@ -20,11 +20,12 @@ temp_time_gl = 0
 total_time = 0
 
 # create live capture instance
-cap  = pcapy.open_live(loopback, 1024, 1, 5)
+cap  = pcapy.open_live(loopback, 1024, 1, 10)
 
 while True:
     (header, payload) = cap.next()
-
+    while header == None:
+        (header, payload) = cap.next()
     # Get timestamp to record time between each packets
     epoch, millisecond = header.getts()
     e_str, ms_str = str(epoch), str(millisecond)
@@ -37,7 +38,7 @@ while True:
     # Unpacking TCP packet
     tcp_header = unpack('!HHLLBBHHH', payload[34:54])
     source_port = tcp_header[0]
-    destionation_port = tcp_header[1]
+    destination_port = tcp_header[1]
     sequence_number = tcp_header[2]
     acknowledgement_number = tcp_header[3]
     offset = tcp_header[4] >> 4
@@ -76,17 +77,17 @@ while True:
 
     with open('log.csv', 'a') as csvf:
         writer = csv.writer(csvf, dialect= csv.excel)
-        writer.writerow([ems_fl, source_port, destionation_port, sequence_number, acknowledgement_number, offset, C_W_R, ECN_echo, Urgent, Ack, Push, Reset, Sync, Finish, window, checksum, pointer])
+        writer.writerow([ems_fl, source_port, destination_port, sequence_number, acknowledgement_number, offset, C_W_R, ECN_echo, Urgent, Ack, Push, Reset, Sync, Finish, window, checksum, pointer])
 
-    if (exists('server_close.lock') == True and exists('client_close.lock') == True and finack_counter == 8 and Ack == 1 and Finish == 0):
+    if (exists('server_end.lock') == True and exists('client_end.lock') == True and finack_counter == 8 and Ack == 1 and Finish == 0):
         total_time = temp_time_gl - temp_time_g
         with open('log.csv', 'a') as csvf:
             writer = csv.writer(csvf, dialect= csv.excel)
             writer.writerow(['','', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', (total_bytes - 1)])
-            writer.writerow(['','', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '',(total_time -1)])
+            writer.writerow(['','', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '',(total_time - 3)])
 
-        com("rm server_close.lock")
-        com("rm client_close.lock")
+        com("rm server_end.lock")
+        com("rm client_end.lock")
         finack_counter = 0
 
         break
