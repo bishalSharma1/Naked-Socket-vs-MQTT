@@ -10,7 +10,7 @@ while True:
         client.connect("127.0.0.1", port = 1883)                     
         client.loop_start()
         byteArray = bytes("a"*1000, 'utf-8')                                     
-        client.publish(topic="chat", payload= byteArray,qos=2)
+        client.publish(topic="chat", payload= byteArray,qos=0)
         # com('touch client_start.lock')
         time.sleep(3)
         client.loop_stop()

@@ -20,7 +20,7 @@ def on_dis(cl, ud, rc = 0):
 
 client = mqtt.Client("c1")
 client.connect("127.0.0.1", port = 1883)             
-client.subscribe("chat", qos=2)
+client.subscribe("chat", qos=0)
 print("Starting")
 client.loop_start()
 print('waiting message')

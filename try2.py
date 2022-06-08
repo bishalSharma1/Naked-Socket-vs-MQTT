@@ -32,7 +32,11 @@ while True:
     ems_str = e_str+'.'+ms_str
     ems_fl = float(ems_str)
     if count == 0:
-        temp_time_g = ems_fl 
+        temp_time_g = ems_fl
+
+    # if temp_time_gl == ems_fl:
+    #     continue
+
     temp_time_gl = ems_fl
 
     # Unpacking TCP packet
@@ -88,6 +92,7 @@ while True:
 
         com("rm server_end.lock")
         com("rm client_end.lock")
+        com("rm file_to_receive.txt")
         finack_counter = 0
 
         break

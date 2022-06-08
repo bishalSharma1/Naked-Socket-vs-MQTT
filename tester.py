@@ -19,4 +19,4 @@
 
 with open("file_to_send.txt", "wb") as f:
     byte_seq = bytes('a', 'utf-8')
-    f.write(byte_seq * 10)
+    f.write(byte_seq * 1)

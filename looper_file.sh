@@ -7,15 +7,13 @@ logger () {
 
 server () {
     python subscribe_file.py &
-    echo "server ran..."
 }
 
 client () {
-    echo "client starting..."
     python sensor_file.py
 }
 
-while [ $c -le 1 ] ; # Stop when file.txt has no more lines
+while [ $c -le 100 ] ; # Stop when file.txt has no more lines
 do
     echo "experiment no. $c "
     logger
